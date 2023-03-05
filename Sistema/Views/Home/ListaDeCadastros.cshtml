@@ -1,0 +1,96 @@
+﻿@{
+Layout = "_Layout";
+}
+
+@{/*Campo de Pesquisa*/}
+<div class="row">
+    <div class="col"></div>
+    <div class="col" style="margin-top:20px">
+        <form asp-action="ListaDeCadastros" method="post">
+            <div class="input-group mb-3">
+                <input type="text" name="Pesquisa" class="form-control" placeholder="Digite o nome da criança" aria-label="Digite o nome da criança" aria-describedby="botao">
+                <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="submit" id="botao">Pesquisar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+
+
+@{/*Caixa de responsáveis, caso esteja selecionada*/}
+<div class="row">
+    <div class="col"></div>
+    <div class="col">
+            <div id="caixa_responsaveis" style="border:dashed; margin-bottom: 10px; padding:10px; background-color: aliceblue; width:auto; height:auto; visibility:hidden; ">
+        </div>
+    </div>
+    <div class="col"></div>
+</div>
+   
+<div class="row">
+    <div class="align-content-center" style="display:flex;flex-direction: row;justify-content:center;align-items:center">
+        <table class="table table-responsive" style="width:max-content">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Data de Nascimento</th>
+                    <th>Idade</th>
+                    <th>Responsáveis</th>
+                    <th>Editar</th>
+                </tr>                    
+            </thead>
+            <tbody>
+                @{
+                foreach(Crianca _crianca in BancoDeDados.GetTodasCriancas(ViewBag.Pesquisa)){
+                    <tr>@{/*Estrutura da linha da tabela*/}
+                        <td class="align-middle" >@_crianca.Id</td>
+                        <td class="align-middle" >@_crianca.Nome</td>
+                        <td class="align-middle" >@_crianca.DataDeNascimento.ToString("dd-MM-yyyyThh:mm:ss").Substring(0, 10)</td>
+                        <td class="align-middle" >@_crianca.GetIdade().ToString("0.0") Anos</td>
+                        <td class="align-middle"><button class="btn btn-primary" onclick="MostrarResponsaveis('@(_crianca.Responsaveis)')">Mostrar</button></td>
+                        <td class="align-middle">
+                            <div style="display:flex; flex-flow:row wrap; align-items:center" class="d-inline">
+                                @{/*Botões de Editar e Excluir*/}
+                                @using (Html.BeginForm(new { id = _crianca.Id }))
+                                {
+                                    <button asp-action="Cadastro" asp-route-id="@_crianca.Id" class="btn btn-primary btn-block" type="submit" > Editar </button>
+                                    <span><button asp-action="Exclusao" asp-route-id="@_crianca.Id" class="btn btn-danger  btn-block" type="submit" >Excluir</button></span>
+                                }
+
+                            </div>
+                                                                                
+                        </td>
+                    </tr>
+                } 
+                }
+            </tbody>
+        </table>   
+            
+    </div>
+        
+    <script>
+        function MostrarResponsaveis(resp) {
+                
+            var element = document.getElementById('caixa_responsaveis');
+            element.style.visibility = "visible";
+            var text = '<b>Responsáveis:</b>';
+            var responsaveis = resp.split(',');
+            text += '<ol>'
+            for(var i = 0; i < responsaveis.length; i++){
+                text += '<li>  ' + responsaveis[i] + '</li>';
+            }
+            text += '</ol><button class="btn btn-block btn-primary " onclick="FecharResponsaveis()">Fechar</button>';
+            element.innerHTML = text;
+        }
+        function FecharResponsaveis() {
+
+            var element = document.getElementById('caixa_responsaveis');
+                element.style.visibility = "hidden";
+                element.innerHTML = "";
+        }
+    </script>
+</div>
+      

@@ -1,0 +1,110 @@
+﻿@model Relatorio
+
+@{
+    Layout = "_Layout";
+}
+
+<form method="post">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+
+            <div class="input-group mb-3">
+                <span class="input-group-text">Horario Inicio</span>
+                <input id="DataInicio_" name="DataInicio" type="datetime-local" class="form-control" value="@ViewBag.Ontem">
+                <span class="input-group-text">Horario Fim</span>
+                <input name="DataFim" type="datetime-local" class="form-control" value="@ViewBag.Hoje">
+            </div>
+            <div class="btn-group" >
+                <button class="btn btn-primary" type="submit" name="tipo" value="0" >Completo</button>
+                <button class="btn btn-primary" type="submit" name="tipo" value="1" >Quantidade</button>
+            </div>
+        </div>
+        <div class="col-3"></div>
+    </div>        
+</form>
+
+
+@if (ViewBag.Tipo == Tipo.Completo)
+{
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-10 align-content-center">
+        <table class="table table-responsive"  >
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>Data de Nascimento</th>
+                    <th>Responsáveis</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Responsável Entrada</th>
+                    <th>Responsável Saída</th>
+                </tr>                    
+            </thead>
+            <tbody>
+                @foreach (string item in ViewBag.Relatorio)
+                {
+                    List<string> dados = item.Split(";").ToList();
+                    
+                    <tr>
+                        <td class="align-middle" >@dados[0]</td>
+                        <td class="align-middle" >@dados[1]</td>
+                        <td class="align-middle" >@dados[2]</td>
+                        <td class="align-middle" >@dados[3]</td>
+                        <td class="align-middle" >@dados[4]</td>
+                        <td class="align-middle" >@(String.IsNullOrEmpty(dados[5]) ? "Dentro de Sala" : dados[5].ToString())</td>
+                        <td class="align-middle" >@dados[6]</td>
+                        <td class="align-middle" >@(String.IsNullOrEmpty(dados[5]) ? "Dentro de Sala" : dados[7].ToString())</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-1"></div>
+</div>
+}
+else if (ViewBag.Tipo == Tipo.Quantidade)
+{
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6 align-content-center">
+        <table class="table table-responsive"  >
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Quantidade Entradas</th>
+                    <th>Quantidade Saídas</th>
+                    <th>Quantidade em Sala</th>
+                </tr>                    
+            </thead>
+            <tbody>
+                @{
+                    int total = 0, entradas = 0, saidas = 0;
+                        @foreach (KeyValuePair<Sala, (int, int, int)> item in @ViewBag.RelatorioQuantidade)
+                        {
+                            entradas += item.Value.Item1;
+                            saidas += item.Value.Item2;
+                            total += item.Value.Item3;
+                                <tr>
+                                    <td class="align-middle" ><b>@item.Key.ToString()</b></td>
+                                    <td class="align-middle" >@item.Value.Item1</td>
+                                    <td class="align-middle" >@item.Value.Item2</td>
+                                    <td class="align-middle" >@item.Value.Item3</td>
+                                </tr>
+                        }
+                    }
+                    <tr>
+                        <td><b>Total</b></td>
+                        <td><b>@entradas</b></td>
+                        <td><b>@saidas</b></td>
+                        <td><b>@total</b></td>
+                    </tr>
+                    </tbody>
+                </table> 
+        </div>
+    <div class="col-3"></div>
+</div>  
+}
+    

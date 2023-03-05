@@ -1,0 +1,45 @@
+﻿@model Crianca
+
+@{
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <div class="card-title" style="margin-top:20px; margin-bottom:0px">
+            <h2 class="text-center">Insira os dados</h2>
+        </div>
+            
+        <form asp-action="CadastroRealizado" method="POST">
+            <div style="visibility:hidden">
+                <input asp-for="Id" class="form-control"/>
+            </div>
+            <div>
+                <label asp-for="Nome" class="col-form-label-lg" >Nome: </label><br>
+                <input asp-for="Nome" class="form-control"/>
+            </div>
+            <div>
+                <label asp-for="DataDeNascimento" class="col-form-label-lg">Data Nascimento: </label><br>
+                <input asp-for="DataDeNascimento" class="form-control" type="date"/>
+            </div>
+            <div>
+                <label asp-for="Responsaveis" class="col-form-label-lg" >Responsáveis: </label><br>
+                <input asp-for="Responsaveis" class="form-control" placeholder="Exemplo: Responsavel1, Responsavel2, Responsavel3"/>
+            </div>
+            <div>
+                <br />
+
+                @if(ViewBag.Edicao is not null && ViewBag.Edicao == true)
+                {
+                    <input class="btn btn-primary" type="submit" value="Editar" />
+                }else{
+                    <input class="btn btn-primary" type="submit" value="Cadastrar" />
+                }
+            </div>
+            <br>
+        </form>        
+            
+    </div>
+    <div class="col"></div>
+</div>
+

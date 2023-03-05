@@ -1,0 +1,124 @@
+﻿@model CheckInOut
+@{
+    Layout = "_Layout";
+}
+
+@{/*Campo de pesquisa*/}
+<div class="row">
+    <div class="col"></div>
+    <div class="col" style="margin-top:20px">
+        <form asp-action="CheckIn" method="GET">
+            <div class="input-group mb-3">
+                <input type="text" name="Pesquisa" class="form-control" placeholder="Digite o nome da criança" aria-label="Digite o nome da criança" aria-describedby="botao">
+                <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="submit" id="botao">Pesquisar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+
+@{/*Essa DIV está relacionada à mensagem de erro ou sucesso [Ainda não ta funcionando]*/}
+<div class="row">
+    <div class="align-content-center  table-responsive" style="display:flex;flex-direction: row;justify-content:center;align-items:center">
+        @if(!String.IsNullOrEmpty(ViewBag.Mensagem) && ViewBag.boolMensagem is not null){
+            @if (ViewBag.boolMensagem)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <strong>Successo!</strong> @ViewBag.Mensagem
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <strong>Erro!</strong> @ViewBag.Mensagem
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }      
+            }
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="align-content-center  table-responsive" style="display:flex;flex-direction: row;justify-content:center;align-items:center">
+            
+        <table class="table table-responsive" style="width:max-content">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>CheckIn</th>
+                    <th>CheckOut</th>
+                </tr>                    
+            </thead>
+            <tbody>
+            @{                        
+                foreach (Crianca _crianca in ViewBag.TodasCriancas)
+                {
+                    <tr>
+                        <td class="align-middle" >@_crianca.Id</td>
+                        <td class="align-middle" >@_crianca.Nome</td>
+                        <td class="align-middle" >
+                            @using (@Html.BeginForm(new { Id = _crianca.Id, Horario = DateTime.Now, Entrada = true, Responsavel = "Ninguem" }))
+                            {
+                            <div> @{/*Lista dos Responsáveis da criança*/}
+                                <select name="Responsavel" style="width:100%">
+                                @if (!_crianca.CkeckinRealizado){
+                                    <option value="Ninguem" selected>Selecione</option>
+                                }else{
+                                    <option value="Ninguem" selected>@_crianca.ResponsavelCheckinRealizado</option>
+                                }
+                                            
+                                @foreach (string Res in @_crianca.Responsaveis.Split(","))
+                                {   
+                                    <option value="@Res.Trim()">@Res.Trim()</option>
+                                }
+                                </select>
+                            </div>
+                            <div> @{/*Define a cor e a funcionalidade do botão, de acordo com o status do CheckIn*/}
+                                @if(!_crianca.CkeckinRealizado)
+                                {
+                                    <button class="btn btn-primary" style="width:100%">CheckIn</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary" style="width:100%" type="button">CheckIn</button>
+                                }                                    
+                            </div>
+                            }
+                        </td>
+                        <td class="align-middle">
+                            @using (@Html.BeginForm(new { Id = _crianca.Id, Horario = DateTime.Now, Entrada = false }))
+                            {
+                            <div> @{/*Lista dos Responsáveis da criança*/}
+                                <select name="Responsavel" style="width:100%">
+                                    <option value="Ninguem" selected>Selecione</option>
+                                @foreach (string Res in @_crianca.Responsaveis.Split(","))
+                                {
+                                    <option value="@Res.Trim()">@Res.Trim()</option>
+                                }
+                                </select>
+                            </div>
+                            <div>@{/*Define a cor e a funcionalidade do botão, de acordo com o status do CheckIn*/}
+                                @if (_crianca.CkeckinRealizado)
+                                {
+                                    <button class="btn btn-primary" style="width:100%">CheckOut</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary" style="width:100%" type="button">CheckOut</button>
+                                }    
+                            </div>    
+                            }
+                        </td>
+                    </tr>
+                } 
+            }
+            </tbody>
+        </table> 
+    </div>
+</div>
+

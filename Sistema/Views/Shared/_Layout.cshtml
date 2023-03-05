@@ -1,0 +1,80 @@
+﻿@{
+    var actionAtual = ViewContext.RouteData.Values["action"].ToString();
+}
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    @{
+        if(actionAtual == "Cadastro")
+        {
+            <title>Cadastro</title>
+        }
+        else if (actionAtual == "CadastroRealizado")
+        {
+            <title>Cadastro Realizado</title>
+        }
+        else if (actionAtual == "CheckIn")
+        {
+            <title>CheckIn</title>
+        }
+        else if (actionAtual == "Exclusao")
+        {
+            <title>Exclusão</title>
+        }
+        else if (actionAtual == "Index")
+        {
+            <title>Principal</title>
+        }
+        else if (actionAtual == "ListaDeCadastros")
+        {
+            <title>Lista de Cadastros</title>
+        }
+        else if (actionAtual == "Relatorio")
+        {
+            <title>Relatório</title>
+        }
+    }
+    
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/js/bootstrap2.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-gradient navbar-costumizacao">
+        <div class="container">
+
+            <a asp-action="Index"><img src="~/img/Logo_Arvore_ieq.png" alt="logo IEQ Céu Anil" style="width:100px" /></a>
+            <div><a class="navbar-brand" style="margin-left:20px" asp-action="Index">VillaKids</a></div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ">
+                    <li class="nav-item">
+                        <a class="nav-link @(actionAtual == "Index" ? "active" : "")" aria-current="page" asp-action="Index">Principal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @((actionAtual == "Cadastro" || actionAtual == "CadastroRealizado")  ? "active" : "")" asp-action="Cadastro">Cadastrar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(actionAtual == "CheckIn" ? "active" : "")" asp-action="CheckIn">CheckIn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @((actionAtual == "ListaDeCadastros" || actionAtual == "Exclusao") ? "active" : "")"  asp-action="ListaDeCadastros">Lista de Cadastros</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+
+</body>
+</html>
